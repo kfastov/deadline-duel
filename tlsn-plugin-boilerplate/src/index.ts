@@ -18,7 +18,7 @@ export function config() {
 
 function isValidHost(urlString: string) {
   const url = new URL(urlString);
-  return url.hostname === 'twitter.com' || url.hostname === 'x.com';
+  return url.hostname === 'ethglobal.com';
 }
 
 /**
@@ -26,7 +26,7 @@ function isValidHost(urlString: string) {
   */
 export function start() {
   if (!isValidHost(Config.get('tabUrl'))) {
-    redirect('https://x.com');
+    redirect('https://ethglobal.com/events/bangkok/project');
     outputJSON(false);
     return;
   }
@@ -40,36 +40,31 @@ export function start() {
  * Note that the url needs to be specified in the `config` too, otherwise the request will be refused.
  */
 export function two() {
-  const cookies = getCookiesByHost('api.x.com');
-  const headers = getHeadersByHost('api.x.com');
+  const cookies = getCookiesByHost('api.ethglobal.com');
+  const headers = getHeadersByHost('api.ethglobal.com');
 
   if (
-    !cookies.auth_token ||
-    !cookies.ct0 ||
-    !headers['x-csrf-token'] ||
-    !headers['authorization']
+    !cookies.ethglobal_access_token
   ) {
     outputJSON(false);
     return;
   }
 
   outputJSON({
-    url: 'https://api.x.com/1.1/account/settings.json',
-    method: 'GET',
+    url: 'https://api.ethglobal.com/graphql',
+    method: 'POST',
     headers: {
-      'x-twitter-client-language': 'en',
-      'x-csrf-token': headers['x-csrf-token'],
-      Host: 'api.x.com',
-      authorization: headers.authorization,
-      Cookie: `lang=en; auth_token=${cookies.auth_token}; ct0=${cookies.ct0}`,
+      Host: 'api.ethglobal.com',
+      Cookie: `lang=en; auth_token=${cookies.ethglobal_access_token}`,
       'Accept-Encoding': 'identity',
       Connection: 'close',
     },
     secretHeaders: [
-      `x-csrf-token: ${headers['x-csrf-token']}`,
-      `cookie: lang=en; auth_token=${cookies.auth_token}; ct0=${cookies.ct0}`,
-      `authorization: ${headers.authorization}`,
+      `cookie: lang=en; auth_token=${cookies.ethglobal_access_token}`,
     ],
+    body: JSON.stringify({
+      query: `{ getProjectSelfByEventSlug(eventSlug: "bangkok") { updatedAt name status } }`
+    })
   });
 }
 
