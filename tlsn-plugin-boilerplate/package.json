@@ -1,7 +1,7 @@
 {
-  "name": "twitter_profile",
+  "name": "ethglobal_submission",
   "version": "1.0.0",
-  "description": "Demo TLSNotary plugin to notarize the ownership of a twitter profile",
+  "description": "Demo TLSNotary plugin to notarize the submission status of a project in ETHGlobal hackathon",
   "main": "src/index.ts",
   "scripts": {
     "build": "node esbuild.js"

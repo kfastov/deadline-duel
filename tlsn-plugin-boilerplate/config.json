@@ -1,10 +1,10 @@
 {
-    "title": "Twitter Profile",
-    "description": "Notarize ownership of a twitter profile",
+    "title": "ETHGlobal Submission",
+    "description": "Notarize submission status of a project in ETHGlobal hackathon",
     "steps": [
         {
-            "title": "Visit Twitter website",
-            "cta": "Go to x.com",
+            "title": "Visit ETHGlobal website",
+            "cta": "Go to ethglobal.com",
             "action": "start"
         },
         {
@@ -14,7 +14,7 @@
             "action": "two"
         },
         {
-            "title": "Notarize twitter profile",
+            "title": "Notarize submission status",
             "cta": "Notarize",
             "action": "three",
             "prover": true
@@ -25,15 +25,15 @@
         "notarize"
     ],
     "cookies": [
-        "api.x.com"
+        "api.ethglobal.com"
     ],
     "headers": [
-        "api.x.com"
+        "api.ethglobal.com"
     ],
     "requests": [
         {
-            "url": "https://api.x.com/1.1/account/settings.json",
-            "method": "GET"
+            "url": "https://api.ethglobal.com/graphql",
+            "method": "POST"
         }
     ]
 }
