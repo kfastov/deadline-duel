@@ -55,15 +55,24 @@ export function two() {
     method: 'POST',
     headers: {
       Host: 'api.ethglobal.com',
-      Cookie: `lang=en; auth_token=${cookies.ethglobal_access_token}`,
-      'Accept-Encoding': 'identity',
+      Origin: 'https://ethglobal.com',
+      'Content-Type': 'application/json',
+      Cookie: `auth_token=${cookies.ethglobal_access_token}`,
       Connection: 'close',
     },
     secretHeaders: [
-      `cookie: lang=en; auth_token=${cookies.ethglobal_access_token}`,
+      `cookie: auth_token=${cookies.ethglobal_access_token}`,
     ],
     body: JSON.stringify({
-      query: `{ getProjectSelfByEventSlug(eventSlug: "bangkok") { updatedAt name status } }`
+      operationName: "getProjectSelfByEventSlug",
+      variables: { eventSlug: "bangkok" },
+      query: `query getProjectSelfByEventSlug($eventSlug: String!) {
+          getProjectSelfByEventSlug(eventSlug: $eventSlug) {
+              updatedAt
+              name
+              status
+          }
+      }`
     })
   });
 }
@@ -73,24 +82,26 @@ export function two() {
  * This method is optional in the notarization request. When it is not specified nothing is redacted.
  *
  * In this example it locates the `screen_name` and excludes that range from the revealed response.
+ * TODO: fix for ETHGlobal
  */
-export function parseTwitterResp() {
+export function parseETHGlobalResp() {
   const bodyString = Host.inputString();
-  const params = JSON.parse(bodyString);
+  // const params = JSON.parse(bodyString);
 
-  if (params.screen_name) {
-    const revealed = `"screen_name":"${params.screen_name}"`;
-    const selectionStart = bodyString.indexOf(revealed);
-    const selectionEnd =
-      selectionStart + revealed.length;
-    const secretResps = [
-      bodyString.substring(0, selectionStart),
-      bodyString.substring(selectionEnd, bodyString.length),
-    ];
-    outputJSON(secretResps);
-  } else {
-    outputJSON(false);
-  }
+  // if (params.screen_name) {
+  //   const revealed = `"screen_name":"${params.screen_name}"`;
+  //   const selectionStart = bodyString.indexOf(revealed);
+  //   const selectionEnd =
+  //     selectionStart + revealed.length;
+  //   const secretResps = [
+  //     bodyString.substring(0, selectionStart),
+  //     bodyString.substring(selectionEnd, bodyString.length),
+  //   ];
+  //   outputJSON(secretResps);
+  // } else {
+  //   outputJSON(false);
+  // }
+  outputJSON([bodyString]);
 }
 
 /**
@@ -104,7 +115,7 @@ export function three() {
   } else {
     const id = notarize({
       ...params,
-      getSecretResponse: 'parseTwitterResp',
+      getSecretResponse: 'parseETHGlobalResp',
     });
     outputJSON(id);
   }
